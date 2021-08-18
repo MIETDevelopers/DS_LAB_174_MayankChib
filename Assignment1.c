@@ -274,7 +274,7 @@ void sort()
 void search ()
 {
     list *ptr;
-    int val;
+    int val, flag;
     char shop[20];
     
     ptr = head;
@@ -314,3 +314,4 @@ void search ()
         }
     }
 }
+
