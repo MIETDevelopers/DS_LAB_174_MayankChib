@@ -204,9 +204,10 @@ void view()
 
         else if (c == 2)
         {
-          fflush(stdin);
-            printf("\nEnter the name of the item which you want to filter from others");
-            printf("Item = ");
+          
+            printf("\nEnter the name of the item which you want to filter from others\n");
+            printf("\nItem = ");
+            fflush(stdin);
             gets(itm);
 
         
@@ -314,4 +315,3 @@ void search ()
         }
     }
 }
-
