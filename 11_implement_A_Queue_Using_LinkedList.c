@@ -1,128 +1,127 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-void enque();
-void deque();
-void view();
+void enqueue();
+void dequeue();
+void display();
+int count=0;
 
-struct node 
+struct node   
+{  
+    int data;   
+    struct node *next;  
+};  
+struct node *front;  
+struct node *rear;
+
+int main()
 {
-    int dt;
-    struct node *nt;
-};
+	int choice;
+	while(1){
+				printf("\n~Queue operations using Linked List~\n");
+				printf("\n 1. Enqueue a Node.");
+				printf("\n 2. Dequeue a Node.");
+				printf("\n 3. Display all nodes available in Queue.");
+				printf("\n 4. Exit");
 
-typedef struct node nil;
+				printf("\nEnter your choice: ");
+				scanf("%d", &choice);
 
-nil *hd=NULL;
+				switch(choice)
+				{
+					case 1:
+							printf("\n~Implementing Enqueue function~\n");
+							printf("\n Number of nodes available: %d\n", count);
+							enqueue();
+							break;
 
-int main ()
-{
-    int c;
-
-    while(c != 4)
-    {
-        printf("\n\n-----------------------Main Menu--------------------");
-        printf("\n1.To Insert\n2.To Delete\n3.To Display\n4.To Exit");
-        printf("\nEnter your choise: ");
-        scanf("%d",&c);
-
-        switch(c)
-        {
-            case 1:
-            enque();
-            break;
-
-            case 2:
-            deque();
-            break;
-
-            case 3:
-            view();
-            break;
-
-            case 4:
-            printf("You have succesfilly Exited the code\nHave a nice day");
-            break;
-
-            default:
-            printf("You have entered a wrong choise\nPlease try again");
-            break;
-        }
-    }
+					case 2:
+							printf("\n~Implementing Dequeue function~\n");
+							printf("\n Number of nodes available: %d\n", count);
+							dequeue();
+							break;
+					case 3:
+							printf("\n~Implementing Display function~\n");
+							printf("\n Number of nodes available: %d\n", count);
+							display();
+							break;
+                    case 4:
+                            printf("\nExiting the program!");
+                            exit(0);
+                            break;
+                    default:
+                            printf("\nWrong Choice! :/");
+                            break;
+				}
+			}
+return 0;
 }
 
-void enque()
-{
-    nil *ptr, *temp;
-    int val;
-
-    ptr=(nil*)malloc(sizeof(nil));
-    
-    if(ptr == NULL)
-    {
-        printf("The Queue is full");
-    }
-
-    else
-    {
-        printf("Enter a value: ");
-        scanf("%d", &val);
-        ptr->dt=val;
-        ptr->nt=NULL;
-
-        if(hd == NULL)
-        {
-            hd = ptr;
+void enqueue()  
+{  
+    struct node *ptr;  
+    int item;   
+      
+    ptr = (struct node *) malloc (sizeof(struct node));  
+    if(ptr == NULL)  
+    {  
+        printf("\nOut of Memory Space! :/ ");  
+        return;  
+    }  
+    else  
+    {   
+        printf("\nEnter the value of the node: ");  
+        scanf("%d",&item);  
+        ptr -> data = item;  
+        if(front == NULL)  
+        {  
+            front = ptr;  
+            rear = ptr;   
+            front->next = NULL;  
+            rear->next = NULL;  
+        }  
+        else   
+        {  
+            rear -> next = ptr;  
+            rear = ptr;  
+            rear->next = NULL;  
         }
-
-        else
-        {
-            temp = hd;
-            while(temp -> nt != NULL)
-            {
-                temp = temp -> nt;
-            }
-            temp -> nt = ptr;
-        }
-    }
+    count++;  
+    }  
 }
 
-
-void deque()
-{
-    nil *temp;
-    if(hd == NULL)
-    {
-        printf("The Queue is Empty");
-    }
-    
-    else
-    {
-        temp = hd;
-        hd = temp -> nt;
-        free(temp);
-        printf("\nElement Deleted");
-
-    }
+void dequeue()  
+{  
+    struct node *ptr;  
+    if(front == NULL)  
+    {  
+        printf("\nThe List is Empty! :/");  
+        return;  
+    }  
+    else   
+    {  
+        ptr = front;  
+        front = front -> next;  
+        free(ptr);
+        count--; 
+    }  
 }
 
-void view()
-{
-    nil *ptr;
-    ptr = hd;
-    
-    if (ptr == NULL)
-    {
-        printf("\nNothing to print");
-    }
-
-    else 
-    {
-        printf("\nThe values are ");
-        while(ptr!=NULL)
-        {
-            printf("\n%d ", ptr->dt);
-            ptr = ptr->nt;
-        }
-    }
+void display()  
+{  
+    struct node *ptr;  
+    ptr = front;      
+    if(front == NULL)  
+    {  
+        printf("\nThe List is Empty! :/");  
+    }  
+    else  
+    {   
+    	printf("\nThe nodes in the list are:");  
+        while(ptr != NULL)   
+        {  
+            printf(" %d,",ptr -> data);  
+            ptr = ptr -> next;  
+        }  
+    }  
 }
