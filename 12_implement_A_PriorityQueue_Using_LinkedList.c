@@ -1,142 +1,125 @@
 #include<stdio.h>
 #include<stdlib.h>
-void enqueue();
-void dequeue();
-void view();
-int count=0;
-typedef struct priorityqueue
+
+struct node
 {
-	int data, pr;
-	struct priorityqueue *next;
-}node;
-node *front=NULL;
-node *rear=NULL;
+        int priority;
+        int info;
+        struct node *link;
+}*front=NULL;
+
+void insert(int item, int item_priority);
+int del();
+void display();
+int isEmpty();
 
 int main()
 {
-	int choice;
-    printf("Welcome\n");
-    do
-    {
-        printf("Main Menu\n");
-        printf("Press 1 to enqueue\n");
-        printf("Press 2 to dequeue\n");
-        printf("Press 3 to view the queue\n");
-        printf("Press 4 to exit\n");
-        scanf("%d",&choice);
-
-        switch(choice)
+        int choice,item,item_priority;
+        while(1)
         {
-            case 1:
-                enqueue();
-                break;
+                printf("\n1.Insert\n");
+                printf("2.Delete\n");
+                printf("3.Display\n");
+                printf("4.Quit\n");
+                printf("\nEnter your choice : ");
+                scanf("%d", &choice);
 
-            case 2:
-                dequeue();
-                break;
+                switch(choice)
+                {
+                 case 1:
+                        printf("\nInput the item to be added in the queue : ");
+                        scanf("%d",&item);
+                        printf("\nEnter its priority : ");
+                        scanf("%d",&item_priority);
+                        insert(item, item_priority);
+                        break;
+                 case 2:
+                        printf("\nDeleted item is %d\n",del());
+                        break;
+                 case 3:
+                        display();
+                        break;
+                 case 4:
+                        exit(1);
+                 default :
+                        printf("\nWrong choice\n");
+                }/*End of switch*/
+        }/*End of while*/
 
-            case 3:
-                view();
-                break;  
+        return 0;
+}/*End of main()*/
 
-            case 4:
-                printf("Thanks Visit Again\n");
-                break;
-
-            default:
-                printf("Enter a valid input(1/2/3)\n"); 
-
-        }
-
-
-    }while(choice!=4);
-}
-
-void enqueue()
+void insert(int item,int item_priority)
 {
-	int prior;
-	node *ptr, *temp;
-	ptr=(node*) malloc(sizeof(node));
-	if (ptr==NULL)
-	{
-		printf("Oops! can't enqueue......Memory not available\n");
-	}
-	printf("Enter the element\n");
-	scanf("%d",&ptr->data);
-	printf("Enter the priority\n");
-	scanf("%d",&prior);
-	ptr->pr=prior;
-	ptr->next=NULL;
+        struct node *tmp,*p;
 
-	if (front==NULL)
-	{
-		front=ptr;
-		rear=ptr;
-		printf("%d enqueued with priority %d\n",ptr->data, ptr->pr);
-		count++;
-	}
-	else if (front->pr > prior)
-	{
-		temp=front;
-		front=ptr;
-		ptr->next=temp;
-		printf("%d enqueued with priority %d\n",ptr->data, ptr->pr);
-		count++;
-	}
-	else
-	{
-		temp=front;
-		while((temp->next!=NULL) && ((temp->next->pr) <= prior))
-		{
-			temp=temp->next;
-		}
-		ptr->next=temp->next;
-		temp->next=ptr;
-		printf("%d enqueued with priority %d\n",ptr->data, ptr->pr);
-		count++;
-	}
-	printf("Total elements=%d\n",count);
-    printf("front=%d\n",front->data);
-    printf("rear=%d\n",rear->data);
-}	
-
-void dequeue()
-{
-	node *temp;
-	if (front==NULL && rear==NULL)//if the list is empty
-    {
-        printf("Oops! can't dequeue.....Queue is empty\n");
-    }
-    else
-    {
-    	temp=front;
-    	front=front->next;
-    	printf("%d dequeued with priority %d\n",temp->data, temp->pr);
-    	count--;
-    }
-    printf("Total elements=%d\n",count);
-    printf("front=%d\n",front->data);
-    printf("rear=%d\n",rear->data);
-}
-
-void view()
-{
-    node *temp;//temporary node declaration
-    if (front==NULL && rear==NULL)//if the list is empty
-    {
-        printf("Oops! can't dequeue.....Queue is empty\n");
-    }
-    else
-    {
-        temp=front;
-        while(temp!=NULL)//treversing the queue
+        tmp=(struct node *)malloc(sizeof(struct node));
+        if(tmp==NULL)
         {
-            printf("%d with priority %d\t",temp->data, temp->pr);//printing the elements in the queue
-            printf("\n");
-            temp=temp->next;
+                printf("\nMemory not available\n");
+                return;
         }
-        printf("\nTotal elements=%d\n",count);
-        printf("front=%d\n",front->data);
-        printf("rear=%d\n",rear->data);
-    }
+        tmp->info=item;
+        tmp->priority=item_priority;
+        /*Queue is empty or item to be added has priority more than first element*/
+        if( isEmpty() || item_priority < front->priority )
+        {
+                tmp->link=front;
+                front=tmp;
+        }
+        else
+        {
+                p = front;
+                while( p->link!=NULL && p->link->priority<=item_priority )
+                        p=p->link;
+                tmp->link=p->link;
+                p->link=tmp;
+        }
+}/*End of insert()*/
+
+int del()
+{
+        struct node *tmp;
+        int item;
+        if( isEmpty() )
+        {
+                printf("\nQueue Underflow\n");
+                exit(1);
+        }
+        else
+        {
+                tmp=front;
+                item=tmp->info;
+                front=front->link;
+                free(tmp);
+        }
+        return item;
+}/*End of del()*/
+
+int isEmpty()
+{
+        if( front == NULL )
+                return 1;
+        else
+                return 0;
+
+}/*End of isEmpty()*/
+
+
+void display()
+{
+        struct node *ptr;
+        ptr=front;
+        if( isEmpty() )
+                printf("\nQueue is empty\n");
+        else
+        {       printf("\nQueue is :\n");
+                printf("\nPriority       Item\n");
+                while(ptr!=NULL)
+                {
+                        printf("%5d        %5d\n",ptr->priority,ptr->info);
+                        ptr=ptr->link;
+                }
+        }
 }
